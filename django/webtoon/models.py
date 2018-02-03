@@ -12,22 +12,23 @@ class Webtoon(models.Model):
         return '[{}] {}'.format(self.webtoon_id, self.title)
 
 
-    def get_episode_list(self):
 
-        w = Webtoon.objects.get(pk=self.pk)
-
-        result = get_episode_list(self.webtoon_id)
-
-        # 초급 : 기존에 저장된 웹툰이 있을 경우 저장하지 않음.
-        if not w.episode_set.exists():
-            for i in result:
-                w.episode_set.create(
-                    episode_id=i.episode_id,
-                    title=i.title,
-                    rating=i.rating,
-                    created_date=i.created_date,
-                )
-                w.save()
+    # # 과제3 원안
+    # def get_episode_list(self):
+    #
+    #     w = Webtoon.objects.get(pk=self.pk)
+    #
+    #     # 레벨 1 : 기존에 저장된 웹툰이 있을 경우 저장하지 않음.
+    #     if not w.episode_set.exists():
+    #         result = get_episode_list(self.webtoon_id)
+    #         for i in result:
+    #             w.episode_set.create(
+    #                 episode_id=i.episode_id,
+    #                 title=i.title,
+    #                 rating=i.rating,
+    #                 created_date=i.created_date,
+    #             )
+    #             w.save()
 
 
 
