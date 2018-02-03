@@ -17,13 +17,16 @@
     </div>
 </div>
 <div class="container">
-    {% for ep in webtoon.episode_set.all %}
+    {% for ep in w.episode_set.all %}
         <h2 class="post-title">
-            <a href="{% url 'webtoon:detail' pk=webtoon.pk %}">
-                {{ ep.episode_id }}
+{#            <a href="{% url 'webtoon:detail' pk=w.pk %}">#}
+
+{#            실제 링크로 이동 시도했으나 실패#}
+            <a href=http://comic.naver.com/webtoon/detail.nhn?titleId={{ w.webtoon_id }}&no={{ ep.episode_id }}">
+                {{ ep.episode_id }}|
                 {{ ep.title }}
-                {{ ep.rating }}
-                {{ ep.created_date }}
+                [{{ ep.rating }}]
+                ({{ ep.created_date }})
             </a>
         </h2>
     {% endfor %}

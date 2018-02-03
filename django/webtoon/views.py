@@ -41,9 +41,7 @@ def webtoon_detail(request, pk):
             # w.save() # 인스턴스 형태로 생성한것이 아니라 필요없음?
 
 
-
-    webtoon = Webtoon.objects.get(pk=pk)
     context = {
-        'webtoon': webtoon
+        'w': w
     }
     return render(request, 'webtoon/webtoon_detail.html', context)
