@@ -15,8 +15,14 @@ def get_episode_list(webtoon_id, page=1):
     soup = BeautifulSoup(response.text, 'lxml')
 
     tr_list = soup.select('tr')
-
+    # 1) <thead>안의 tr 태그 제거
     del tr_list[0]
+
+    # 2) <tbody> 하단에 '다음 화를 미리 만나보세요' 제거
+    # http://comic.naver.com/webtoon/list.nhn?titleId=702672&weekday=sat&page=1
+
+    if re.search(r'.*band_banner v2.*', str(tr_list[0])):
+        del tr_list[0]
 
     result = []
     for tr in tr_list:
