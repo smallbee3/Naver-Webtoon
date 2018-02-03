@@ -18,6 +18,8 @@ class Webtoon(models.Model):
         w = Webtoon.objects.get(pk=self.pk)
 
         # 레벨 1 : 기존에 저장된 웹툰이 있을 경우 저장하지 않음.
+        #         models.py에 작성할 경우 console에서만
+        #         실행가능한 문제가 있음. -> view에서 작성
         if not w.episode_set.exists():
             result = get_episode_list(self.webtoon_id)
             for i in result:

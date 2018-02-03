@@ -3,19 +3,20 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
 def get_tr_list(webtoon_id):
-
     url = 'https://comic.naver.com/webtoon/list.nhn'
 
     temp1 = ''
     tr_return = []
+    i = 1
 
-    for i in range(1, 3):
+    while True:
         params = {
             'titleId': webtoon_id,
             'page': i
         }
+        # print(f'{i}번째 반복')
+        i += 1
         response = requests.get(url, params)
         source = response.text
         soup = BeautifulSoup(source, 'lxml')
@@ -56,24 +57,29 @@ def get_tr_list(webtoon_id):
         if re.search(r'.*band_banner v2.*', str(tr_list[0])):
             del tr_list[0]
 
-
         # 첫번째 tr요소의 제목을 비교
         temp2 = tr_list[0].select_one('td.title > a').text
-        if temp1 == '':
-            temp1 = temp2
-        elif temp1 == temp2:
-                break
+
+        # 바뀌는 과정 출력
+        # print(f'temp1: {temp1}')
+        # print(f'temp2: {temp2}')
+
+        if temp1 == temp2:
+            break
+        temp1 = temp2
 
         # 위에서 삭제 한 후의 값을 저장.
         tr_return.extend(tr_list)
 
+        ##################################################
+        # 무한루프가 작동하여 아이피 차단되는 것을 막기위한 안전장치 설정
+        if i == 10:
+            break
+
     return tr_return
 
 
-
-
 def get_episode_list(webtoon_id):
-
     # 시도 1 - 각각의 HTML 페이지를 하나로 합치기
     ###########################################################################
     # BeautifulSoup로 HTML 문서 2개를 저장한 source를 읽으려고 했으나 실패
@@ -93,7 +99,6 @@ def get_episode_list(webtoon_id):
 
     tr_list = get_tr_list(webtoon_id)
 
-
     # 예외처리 방법 1 : del 함수 사용
     # # 1) <thead>안의 tr 태그 제거
     # del tr_list[0]
@@ -103,15 +108,11 @@ def get_episode_list(webtoon_id):
     # if re.search(r'.*band_banner v2.*', str(tr_list[0])):
     #     del tr_list[0]
 
-
-
     # 반복된 BeautifulSoup 객체로 BeautifulSoup을 그대로 쓸 수 있다.
     # soup = BeautifulSoup(tr_list, 'lxml')
 
-
     result = []
     for tr in tr_list:
-
         # # 예외처리 방법2 : continue 사용
         # -> 시도 2의 외부함수로 인해 다시 del tr 함수로 사용
         ###################################################
@@ -153,8 +154,7 @@ class EpisodeData:
         return f'{self.episode_id} {self.title} [{self.rating}] ({self.created_date}) {self.url_thumbnail}'
 
 
-
 if __name__ == '__main__':
-    result = get_episode_list(703629)
+    result = get_episode_list(696602)
     for i in result:
         print(i)

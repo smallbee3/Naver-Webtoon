@@ -25,7 +25,7 @@ def webtoon_detail(request, pk):
     w = Webtoon.objects.get(pk=pk)
 
     # 레벨 2 : 모델이 아닌 뷰에 크롤링 코드 넣기
-    #         해당 에피소드 접속 시에 중복여부 체크 및 크롤링
+    #        해당 에피소드(디테일) 접속 시 중복여부 체크 및 크롤링
 
     if not w.episode_set.exists():
         # webtoon의 id값 - ex) 1인용기분 703835
