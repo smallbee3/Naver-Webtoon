@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .models import Webtoon
-from utils.crawler import get_episode_list
+from utils.crawler_all_episode import get_episode_list
 
 
 def webtoon_list(request):
@@ -54,8 +54,8 @@ def webtoon_detail(request, pk):
 
 
     elif not result[0].title == w.episode_set.first().title:
-        print(result[0].title)
-        print(w.episode_set.first().title)
+        print(f'크롤링 최근 title: {result[0].title}')
+        print(f'기존 최근 title: {w.episode_set.first().title}')
         print(f'"{w.title}" 신규에피소드 업데이트 크롤링실행')
 
         # 기존 에피소드 삭제
