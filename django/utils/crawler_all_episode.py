@@ -3,9 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
 def get_tr_list(webtoon_id):
-
     url = 'https://comic.naver.com/webtoon/list.nhn'
 
     # 시도 4 - 마지막 페이지 번호 알아내기
@@ -19,7 +17,7 @@ def get_tr_list(webtoon_id):
     last_page = soup.select_one('div.paginate strong.page > em').text
     print(f'마지막 페이지 번호: {last_page}')
 
-    # 시도 3
+    # 시도 3 전처리
     # temp_title1 = ''
     # temp_date1 = 1
 
@@ -36,7 +34,6 @@ def get_tr_list(webtoon_id):
         soup = BeautifulSoup(source, 'lxml')
         tr_list = soup.select('tr')
 
-
         # 시도 2, 3의 while loop
         # i = 1
         # while True:
@@ -50,7 +47,6 @@ def get_tr_list(webtoon_id):
         #     source = response.text
         #     soup = BeautifulSoup(source, 'lxml')
         #     tr_list = soup.select('tr')
-
 
         #########################################################################
         # 시도 2 실패 : for문 안에서 리스트를 삭제하면 그것으로 인해
@@ -121,10 +117,6 @@ def get_tr_list(webtoon_id):
 
         tr_return.extend(tr_list)
 
-
-
-
-
         ##################################################
         # 무한루프가 작동하여 아이피 차단되는 것을 막기위한 안전장치 설정
         if i == 5:
@@ -133,10 +125,7 @@ def get_tr_list(webtoon_id):
     return tr_return
 
 
-
-
-def get_episode_list(webtoon_id):
-
+def get_all_episode_list(webtoon_id):
     # 시도 1 - 각각의 HTML 페이지를 하나로 합치기
     ###########################################################################
     # BeautifulSoup로 HTML 문서 2개를 저장한 source를 읽으려고 했으나 실패
@@ -156,7 +145,6 @@ def get_episode_list(webtoon_id):
 
     tr_list = get_tr_list(webtoon_id)
 
-
     # 예외처리 방법 1 : del 함수 사용
     # # 1) <thead>안의 tr 태그 제거
     # del tr_list[0]
@@ -166,15 +154,11 @@ def get_episode_list(webtoon_id):
     # if re.search(r'.*band_banner v2.*', str(tr_list[0])):
     #     del tr_list[0]
 
-
-
     # 반복된 BeautifulSoup 객체로 BeautifulSoup을 그대로 쓸 수 있다.
     # soup = BeautifulSoup(tr_list, 'lxml')
 
-
     result = []
     for tr in tr_list:
-
         # # 예외처리 방법2 : continue 사용
         # -> 시도 2의 외부함수로 인해 다시 del tr 함수로 사용
         ###################################################
@@ -200,7 +184,11 @@ def get_episode_list(webtoon_id):
             rating,
             created_date
         )
-        result.append(episode)
+        # result.append(episode)
+        # 모든 페이지를 가져와서 뿌려주기만 하면 되는 crawler_all_episode.py
+        # 는 사실 관계 없으나 신규 에피소드를 가져와 추가하는 crawler_new_episode.py에서
+        # 기존 리스트안의 데이터가 역순 pk로 저장되어 있어서 문제가 됨.
+        result.insert(0, episode)
     return result
 
 
@@ -216,12 +204,10 @@ class EpisodeData:
         return f'{self.episode_id} {self.title} [{self.rating}] ({self.created_date}) {self.url_thumbnail}'
 
 
-
 if __name__ == '__main__':
-    result = get_episode_list(702672)
+    result = get_all_episode_list(702672)
     for i in result:
         print(i)
-
 
 # 1인용기분 703835
 # 노곤하개 702672
