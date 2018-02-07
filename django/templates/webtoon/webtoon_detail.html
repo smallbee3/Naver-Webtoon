@@ -23,7 +23,7 @@
 
             {#            실제 링크로 이동 시도했으나 실패 #}
             {#            -> 알고보니 " 를 빼먹어서 해당 주소를 완벽하게 가져오지 못한 것 #}
-            <a href="http://comic.naver.com/webtoon/detail.nhn?titleId={{ w.webtoon_id }}&no={{ ep.episode_id }}">
+            <a href="http://comic.naver.com/webtoon/detail.nhn?titleId={{ ep.webtoon.webtoon_id }}&no={{ ep.episode_id }}">
                 {{ ep.episode_id }}|
                 {{ ep.title }}
                 [{{ ep.rating }}]
